@@ -4,6 +4,7 @@ from requests_file import FileAdapter
 from bs4 import BeautifulSoup
 import json
 import re
+import unicodedata
 
 book_list = [
     ["GEN", 50, "1Móz", "1 Mózes"], 
@@ -138,29 +139,37 @@ def chapters_content(book, chapter):
     
     all_verse_div = chapter_body.find_all("div")
     
+    chapter_in_one_string = ""
+    
     for verse_div in all_verse_div:
+        chapter_in_one_string += verse_div.text
+
+    # print(chapter_in_one_string)
+    chapter_in_one_string = unicodedata.normalize('NFKD', chapter_in_one_string)
             
-        verse_div_list = re.split(r'(\d+)', verse_div.get_text(strip=True))
-        try:
-            verse_div_list.remove('')
-        except:
-            pass
-        
-        text_en = ''
-        num = ''
-        index = 0
-        
-        for element in verse_div_list:
-            index += 1
-            if index % 2 == 0:
-                text_en = element
-                verse_list.append({"num": num, "text_en": text_en}) 
-            else:
-                num = element
+    verse_div_list = re.split(r'(\d+)', chapter_in_one_string.strip())    
+    # print(verse_div_list)
+    
+    try:
+        verse_div_list.remove('')
+    except:
+        pass
+    
+    text_en = ''
+    num = ''
+    index = 0
+    
+    for element in verse_div_list:
+        index += 1
+        if index % 2 == 0:
+            text_en = str(element.strip())
+            verse_list.append({"num": num, "text_en": text_en}) 
+        else:
+            num = element
 
     return verse_list   
     
     
 
-a_whole_chapter = chapters_content("PSA", 1)
+a_whole_chapter = chapters_content("JOB", 42)
 print(a_whole_chapter)
