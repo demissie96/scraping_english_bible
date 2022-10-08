@@ -96,7 +96,7 @@ def chapters_content(book, chapter):
     s = requests.Session()
     s.mount('file://', FileAdapter())
 
-    response = s.get(f'file://{os.path.dirname(__file__)}/eng-web_html/{book}{chapter_url}.htm')    
+    response = s.get(f'file://{os.path.dirname(__file__)}/eng_web_html/{book}{chapter_url}.htm')    
     soup = BeautifulSoup(response.content, 'html.parser')
     
     
