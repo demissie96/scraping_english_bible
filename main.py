@@ -98,23 +98,53 @@ def chapters_content(book, chapter):
     
     soup = BeautifulSoup(response.content, 'html.parser')
     
-    notemarks = soup.find_all("a", class_="notemark")
+    
     verse_span = soup.find_all("span", class_="verse")
-    
-    for note in notemarks:
-        note.decompose()
-    
     for span in verse_span:
         span.replace_with(span.text)
+    
+    notemarks = soup.find_all("a", class_="notemark")
+    mt = soup.find_all("div", class_="mt")
+    mt2 = soup.find_all("div", class_="mt2")
+    mt3 = soup.find_all("div", class_="mt3")
+    ms = soup.find_all("div", class_="ms")
+    chapterlabel = soup.find_all("div", class_="chapterlabel")
+    tnav = soup.find_all("div", class_="tnav")
+    footnote = soup.find_all("div", class_="footnote")
+    copyright = soup.find_all("div", class_="copyright")
+    
+    for x in notemarks:
+        x.decompose()
+    for x in mt:
+        x.decompose()
+    for x in mt2:
+        x.decompose()
+    for x in mt3:
+        x.decompose()
+    for x in ms:
+        x.decompose()
+    for x in chapterlabel:
+        x.decompose()
+    for x in tnav:
+        x.decompose()
+    for x in footnote:
+        x.decompose()
+    for x in copyright:
+        x.decompose()
+    
+   
 
     chapter_body = soup.find("div", class_="main")
     
-    all_verse_div = chapter_body.find_all("div", class_="p")
+    all_verse_div = chapter_body.find_all("div")
     
     for verse_div in all_verse_div:
             
         verse_div_list = re.split(r'(\d+)', verse_div.get_text(strip=True))
-        verse_div_list.remove('')
+        try:
+            verse_div_list.remove('')
+        except:
+            pass
         
         text_en = ''
         num = ''
@@ -127,9 +157,10 @@ def chapters_content(book, chapter):
                 verse_list.append({"num": num, "text_en": text_en}) 
             else:
                 num = element
-            
+
     return verse_list   
     
     
 
-chapters_content("GEN", 1)
+a_whole_chapter = chapters_content("PSA", 1)
+print(a_whole_chapter)
