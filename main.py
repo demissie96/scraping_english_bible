@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import json
 import re
 import unicodedata
+import os
 
 book_list = [
     ["GEN", 50, "1Móz", "1 Mózes"], 
@@ -95,8 +96,7 @@ def chapters_content(book, chapter):
     s = requests.Session()
     s.mount('file://', FileAdapter())
 
-    response = s.get(f'file:///home/demissiejohannes/Desktop/Portfolio%20Projects/scrape_english_bible/eng-web_html/{book}{chapter_url}.htm')
-    
+    response = s.get(f'file://{os.path.dirname(__file__)}/eng-web_html/{book}{chapter_url}.htm')    
     soup = BeautifulSoup(response.content, 'html.parser')
     
     
@@ -131,8 +131,7 @@ def chapters_content(book, chapter):
     for x in footnote:
         x.decompose()
     for x in copyright:
-        x.decompose()
-    
+        x.decompose()    
    
 
     chapter_body = soup.find("div", class_="main")
@@ -144,11 +143,8 @@ def chapters_content(book, chapter):
     for verse_div in all_verse_div:
         chapter_in_one_string += verse_div.text
 
-    # print(chapter_in_one_string)
-    chapter_in_one_string = unicodedata.normalize('NFKD', chapter_in_one_string)
-            
+    chapter_in_one_string = unicodedata.normalize('NFKD', chapter_in_one_string)            
     verse_div_list = re.split(r'(\d+)', chapter_in_one_string.strip())    
-    # print(verse_div_list)
     
     try:
         verse_div_list.remove('')
@@ -187,7 +183,6 @@ def chapters_content(book, chapter):
 # Create a json Bible
 
 for element in book_list:
-    print(element)    
 
     current_book = element[0]
     current_book_title = element[3]
@@ -205,10 +200,3 @@ for element in book_list:
         json.dump(current_array, write_file, ensure_ascii=False)
 
     print(f"*** {current_book_title} is done ***")
-
-
-
-# For test:
-
-# a_whole_chapter = chapters_content("PSA", 1)
-# print(a_whole_chapter)
