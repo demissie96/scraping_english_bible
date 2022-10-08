@@ -5,3 +5,12 @@ Scraping the __[WEB Bible](https://ebible.org/web/)__ and put every chapter into
 + Source website ➡️ https://ebible.org/web/
 + Scraping code ➡️ main.py
 + Result files ➡️ scraped_chapters_eng/
+
+---
+
+### Tech Stacks:
+
+- Python
+- BeautifulSoup
+- JSON
+- HTML
