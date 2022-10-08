@@ -159,17 +159,56 @@ def chapters_content(book, chapter):
     num = ''
     index = 0
     
-    for element in verse_div_list:
-        index += 1
-        if index % 2 == 0:
-            text_en = str(element.strip())
-            verse_list.append({"num": num, "text_en": text_en}) 
-        else:
-            num = element
+    if len(verse_div_list) % 2 != 0:
+        for element in verse_div_list:
+            if element == verse_div_list[0]:
+                verse_list.append({"num": "0", "text_en": element})
+            else:    
+                index += 1
+                if index % 2 == 0:
+                    text_en = str(element.strip())
+                    verse_list.append({"num": num, "text_en": text_en}) 
+                else:
+                    num = element
+                
+    else:
+        for element in verse_div_list:
+                    
+            index += 1
+            if index % 2 == 0:
+                text_en = str(element.strip())
+                verse_list.append({"num": num, "text_en": text_en}) 
+            else:
+                num = element
 
     return verse_list   
     
-    
 
-a_whole_chapter = chapters_content("JOB", 42)
-print(a_whole_chapter)
+# Create a json Bible
+
+for element in book_list:
+    print(element)    
+
+    current_book = element[0]
+    current_book_title = element[3]
+    total_chapters = element[1]
+    current_chapter = 1
+    
+    current_array = {}
+
+    while current_chapter <= total_chapters:
+        a_whole_chapter = chapters_content(current_book, current_chapter)
+        current_array[current_chapter] = a_whole_chapter
+        current_chapter += 1
+
+    with open(f"scraped_chapters_eng/{current_book}_english.json", "w", encoding='utf-8') as write_file:
+        json.dump(current_array, write_file, ensure_ascii=False)
+
+    print(f"*** {current_book_title} is done ***")
+
+
+
+# For test:
+
+# a_whole_chapter = chapters_content("PSA", 1)
+# print(a_whole_chapter)
